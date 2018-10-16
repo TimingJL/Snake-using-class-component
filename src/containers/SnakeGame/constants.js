@@ -1,2 +1,15 @@
+export const KEY_REDUCER = 'SNAKE_GAME';
+export const INIT = `${KEY_REDUCER}/INIT`;
+export const SET_SNAKE_MOVING = `${KEY_REDUCER}/SET_SNAKE_MOVING`;
+export const SET_SNAKE_DIRECTION = `${KEY_REDUCER}/SET_SNAKE_DIRECTION`;
+
 export const GAME_WRAPPER_SIZE = 600;
-export const GAME_WIDTH = 40;
+export const GAME_WIDTH = 20;
+
+export const ARROW_UP = 'ArrowUp';
+export const ARROW_DOWN = 'ArrowDown';
+export const ARROW_LEFT = 'ArrowLeft';
+export const ARROW_RIGHT = 'ArrowRight';
+
+export const BACKGROUND_COLOR = '#1e1e1e';
+

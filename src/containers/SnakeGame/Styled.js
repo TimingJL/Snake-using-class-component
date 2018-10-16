@@ -15,10 +15,13 @@ export const StyledSnakeGame = styled.div`
         display: grid;
         grid-template-columns: repeat(${GAME_WIDTH}, 1fr);
         grid-template-rows: repeat(${GAME_WIDTH}, 1fr);
-        background: grey;
+        background: #161616;
     }
     .snake-game__map-block-item {
         border: 1px solid black;
         box-sizing: border-box;
+    }
+    .snake-game__draw-snake-body {
+        background: white;
     }
 `;
