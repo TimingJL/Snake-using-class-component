@@ -7,6 +7,7 @@ import {
     GAME_WIDTH,
     SET_SNAKE_MOVING,
     SET_SNAKE_DIRECTION,
+    SET_SNAKE_GAME_START,
 
     ARROW_UP,
     ARROW_DOWN,
@@ -20,14 +21,14 @@ direction[ARROW_DOWN] = { x: 0, y: 1 };
 direction[ARROW_LEFT] = { x: -1, y: 0 };
 direction[ARROW_RIGHT] = { x: 1, y: 0 };
 
-const defaultFood = {
+const createFood = () => ({
     x: Math.floor(Math.random() * GAME_WIDTH),
     y: Math.floor(Math.random() * GAME_WIDTH),
-};
+});
 
 const defaultSnake = {
     body: [],
-    maxLength: 5,
+    maxLength: 2,
     headPosition: {
         x: 0,
         y: 0,
@@ -36,6 +37,7 @@ const defaultSnake = {
         x: 1,
         y: 0,
     },
+    speed: 200,
 };
 
 const defaultBlocks = _.range(0, GAME_WIDTH).map((value, indexY) => (
@@ -51,13 +53,15 @@ const defaultBlocks = _.range(0, GAME_WIDTH).map((value, indexY) => (
 const initialState = fromJS({
     blocks: defaultBlocks,
     snake: defaultSnake,
-    food: defaultFood,
+    food: createFood(),
+    isStartGame: false,
+    score: 0,
 });
 
 function snakeGameReducer(state = initialState, action) {
     switch (action.type) {
         case INIT: {
-            return state;
+            return initialState;
         }
 
         case SET_SNAKE_MOVING: {
@@ -65,6 +69,15 @@ function snakeGameReducer(state = initialState, action) {
             const headPositionX = state.getIn(['snake', 'headPosition', 'x']);
             const headPositionY = state.getIn(['snake', 'headPosition', 'y']);
             const maxLength = state.getIn(['snake', 'maxLength']);
+            const snakeBody = state.getIn(['snake', 'body']);
+            const updatedPositionX = headPositionX + direction.get('x');
+            const updatedPositionY = headPositionY + direction.get('y');
+            const eatSelf = snakeBody.find((body) => (
+                body.get('x') === updatedPositionX && body.get('y') === updatedPositionY
+            ));
+            if (eatSelf) {
+                return state.set('isStartGame', false);
+            }
             return state
                 .updateIn(['snake', 'body'], (body) => {
                     let updatedBody = body.push(fromJS({
@@ -81,31 +94,44 @@ function snakeGameReducer(state = initialState, action) {
                 .updateIn(['food'], (food) => {
                     if (food.get('x') === headPositionX &&
                         food.get('y') === headPositionY) {
-                            return fromJS({
-                                x: Math.floor(Math.random() * GAME_WIDTH),
-                                y: Math.floor(Math.random() * GAME_WIDTH),
-                            });
-                        }
+                        return fromJS(createFood());
+                    }
                     return food;
                 })
                 .updateIn(['snake', 'maxLength'], (maxLength) => {
                     const food = state.get('food');
                     if (food.get('x') === headPositionX &&
                         food.get('y') === headPositionY) {
-                            return maxLength + 1;
-                        }
+                        return maxLength + 1;
+                    }
                     return maxLength;
+                })
+                .updateIn(['score'], (score) => {
+                    const food = state.get('food');
+                    if (food.get('x') === headPositionX &&
+                        food.get('y') === headPositionY) {
+                        return score + 1;
+                    }
+                    return score;
                 });
         }
 
         case SET_SNAKE_DIRECTION: {
             return state.updateIn(['snake', 'direction'], (dir) => {
+                if (!direction[action.payload]) {
+                    return dir;
+                }
                 if (dir.get('x') * -1 === direction[action.payload].x &&
                     dir.get('y') * -1 === direction[action.payload].y) {
-                        return dir;
-                    }
+                    return dir;
+                }
                 return fromJS(direction[action.payload]);
             });
+        }
+
+        case SET_SNAKE_GAME_START: {
+            return initialState
+                .set('isStartGame', true);
         }
 
         default: {

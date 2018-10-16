@@ -17,8 +17,20 @@ const makeSelectFood = () =>
         tictactoeState.get('food'),
     );
 
+const makeSelectIsStartGame = () =>
+    createSelector(selectSnakeGame, tictactoeState =>
+        tictactoeState.get('isStartGame'),
+    );
+
+const makeSelectScore = () =>
+    createSelector(selectSnakeGame, tictactoeState =>
+        tictactoeState.get('score'),
+    );
+
 export {
     makeSelectSnake,
     makeSelectBlocks,
     makeSelectFood,
+    makeSelectIsStartGame,
+    makeSelectScore,
 };
