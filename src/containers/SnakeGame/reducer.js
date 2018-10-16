@@ -20,6 +20,11 @@ direction[ARROW_DOWN] = { x: 0, y: 1 };
 direction[ARROW_LEFT] = { x: -1, y: 0 };
 direction[ARROW_RIGHT] = { x: 1, y: 0 };
 
+const defaultFood = {
+    x: Math.floor(Math.random() * GAME_WIDTH),
+    y: Math.floor(Math.random() * GAME_WIDTH),
+};
+
 const defaultSnake = {
     body: [],
     maxLength: 5,
@@ -46,6 +51,7 @@ const defaultBlocks = _.range(0, GAME_WIDTH).map((value, indexY) => (
 const initialState = fromJS({
     blocks: defaultBlocks,
     snake: defaultSnake,
+    food: defaultFood,
 });
 
 function snakeGameReducer(state = initialState, action) {
@@ -70,23 +76,25 @@ function snakeGameReducer(state = initialState, action) {
                     }
                     return fromJS(updatedBody);
                 })
-                .updateIn(['snake', 'headPosition', 'x'], (x) => {
-                    const updatedPosition = x + direction.get('x');
-                    if (updatedPosition > GAME_WIDTH) {
-                        return 0;
-                    } else if (updatedPosition < 0) {
-                        return GAME_WIDTH;
-                    }
-                    return updatedPosition;
+                .updateIn(['snake', 'headPosition', 'x'], (x) => updatePosition(x + direction.get('x')))
+                .updateIn(['snake', 'headPosition', 'y'], (y) => updatePosition(y + direction.get('y')))
+                .updateIn(['food'], (food) => {
+                    if (food.get('x') === headPositionX &&
+                        food.get('y') === headPositionY) {
+                            return fromJS({
+                                x: Math.floor(Math.random() * GAME_WIDTH),
+                                y: Math.floor(Math.random() * GAME_WIDTH),
+                            });
+                        }
+                    return food;
                 })
-                .updateIn(['snake', 'headPosition', 'y'], (y) => {
-                    const updatedPosition = y + direction.get('y');
-                    if (updatedPosition > GAME_WIDTH) {
-                        return 0;
-                    } else if (updatedPosition < 0) {
-                        return GAME_WIDTH;
-                    }
-                    return updatedPosition;
+                .updateIn(['snake', 'maxLength'], (maxLength) => {
+                    const food = state.get('food');
+                    if (food.get('x') === headPositionX &&
+                        food.get('y') === headPositionY) {
+                            return maxLength + 1;
+                        }
+                    return maxLength;
                 });
         }
 
@@ -104,6 +112,15 @@ function snakeGameReducer(state = initialState, action) {
             return state;
         }
     }
+}
+
+const updatePosition = (position) => {
+    if (position > GAME_WIDTH) {
+        return 0;
+    } else if (position < 0) {
+        return GAME_WIDTH;
+    }
+    return position;
 }
 
 export default snakeGameReducer;

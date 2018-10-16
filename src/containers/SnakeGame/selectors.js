@@ -1,5 +1,4 @@
 import { createSelector } from 'reselect';
-// import { fromJS } from 'immutable';
 
 const selectSnakeGame = state => state.get('snakeGame');
 
@@ -13,7 +12,13 @@ const makeSelectBlocks = () =>
         tictactoeState.get('blocks'),
     );
 
+const makeSelectFood = () =>
+    createSelector(selectSnakeGame, tictactoeState =>
+        tictactoeState.get('food'),
+    );
+
 export {
     makeSelectSnake,
     makeSelectBlocks,
+    makeSelectFood,
 };

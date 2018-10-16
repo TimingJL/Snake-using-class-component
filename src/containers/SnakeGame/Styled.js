@@ -24,4 +24,7 @@ export const StyledSnakeGame = styled.div`
     .snake-game__draw-snake-body {
         background: white;
     }
+    .snake-game__draw-snake-food {
+        background: red;
+    }
 `;
