@@ -37,7 +37,7 @@ const defaultSnake = {
         x: 1,
         y: 0,
     },
-    speed: 200,
+    speed: 100,
 };
 
 const defaultBlocks = _.range(0, GAME_WIDTH).map((value, indexY) => (

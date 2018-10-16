@@ -1,8 +1,23 @@
-import styled from 'styled-components';
+import styled, { keyframes } from 'styled-components';
 import {
     GAME_WIDTH,
     GAME_WRAPPER_SIZE,
 } from './constants';
+
+const pulse = keyframes`
+    0% {
+        -moz-box-shadow: 0 0 0 0 red;
+        box-shadow: 0 0 0 0 red;
+    }
+    70% {
+        -moz-box-shadow: 0 0 0 20px rgba(204,169,44, 0);
+        box-shadow: 0 0 0 20px rgba(204,169,44, 0);
+    }
+    100% {
+        -moz-box-shadow: 0 0 0 0 rgba(204,169,44, 0);
+        box-shadow: 0 0 0 0 rgba(204,169,44, 0);
+    }
+`;
 
 export const StyledSnakeGame = styled.div`
     position: relative;
@@ -28,6 +43,8 @@ export const StyledSnakeGame = styled.div`
     }
     .snake-game__draw-snake-food {
         background: red;
+        border-radius: 100%;
+        animation: ${pulse} 2s infinite;
     }
     .snake-game__panel {
         width: 100%;
