@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { createStructuredSelector } from 'reselect';
+import VirtualKeyboard from 'containers/SnakeGame/components/VirtualKeyboard';
 import {
     setSnakeMoving,
     setSnakeDirection,
@@ -13,12 +14,10 @@ import {
     makeSelectFood,
     makeSelectIsStartGame,
     makeSelectScore,
+    makeSelectIsPause,
 } from './selectors';
 import {
-    ARROW_UP,
-    ARROW_DOWN,
-    ARROW_LEFT,
-    ARROW_RIGHT,
+    SPACE,
 } from './constants';
 
 let gameInterval;
@@ -89,9 +88,11 @@ class SnakeGame extends Component {
             food,
             isStartGame,
             score,
+            isPause,
         } = this.props;
         return (
             <StyledSnakeGame onKeyDown={this.handleOnKeyDown}>
+                <div className="snake-game__score-info">Score: {score}</div>
                 {
                     !isStartGame &&
                     <div className="snake-game__panel">
@@ -120,16 +121,12 @@ class SnakeGame extends Component {
                         ))
                     }
                 </div>
-                <div className="snake-game__virtual-keyboard">
-                    <div>
-                        <div data-code={ARROW_UP} className="virtual-keyboard__button fas fa-arrow-circle-up" onClick={this.handleOnVirtualKeyboardClick} />
-                    </div>
-                    <div className="virtual-keyboard__wrapper-bottom">
-                        <div data-code={ARROW_LEFT} className="virtual-keyboard__button fas fa-arrow-circle-left" onClick={this.handleOnVirtualKeyboardClick} />
-                        <div data-code={ARROW_DOWN} className="virtual-keyboard__button fas fa-arrow-circle-down" onClick={this.handleOnVirtualKeyboardClick} />
-                        <div data-code={ARROW_RIGHT} className="virtual-keyboard__button fas fa-arrow-circle-right" onClick={this.handleOnVirtualKeyboardClick} />
-                    </div>
+                <div data-code={SPACE} onClick={this.handleOnVirtualKeyboardClick} className="snake-game__pause-game-btn">
+                    {
+                        isPause ? '繼續' : '暫停'
+                    }
                 </div>
+                <VirtualKeyboard handleOnClick={this.handleOnVirtualKeyboardClick} />
             </StyledSnakeGame>
         );
     }
@@ -141,6 +138,7 @@ const mapStateToProps = createStructuredSelector({
     food: makeSelectFood(),
     isStartGame: makeSelectIsStartGame(),
     score: makeSelectScore(),
+    isPause: makeSelectIsPause(),
 });
 
 const mapDispatchToProps = dispatch => ({

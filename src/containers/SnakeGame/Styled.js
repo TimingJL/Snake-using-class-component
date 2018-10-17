@@ -28,7 +28,6 @@ export const StyledSnakeGame = styled.div`
             width: calc(100vw - 20px);
             height: calc(100vw - 20px);
         }
-        margin-top: 20px;
         display: grid;
         grid-template-columns: repeat(${GAME_WIDTH}, 1fr);
         grid-template-rows: repeat(${GAME_WIDTH}, 1fr);
@@ -82,22 +81,25 @@ export const StyledSnakeGame = styled.div`
             transition: all 0.3s;
         }
     }
-    .snake-game__virtual-keyboard {
+    .snake-game__pause-game-btn {
         color: white;
-        display: flex;
-        flex-direction: column;
-        justify-content: center;
-        align-items: center;
-        font-size: 5em;
+        border: 1px solid white;
+        border-radius: 8px;
+        text-align: center;
+        line-height: 50px;
+        font-size: 1.5em;
+        letter-spacing: 5px;
+        cursor: pointer;
+        &:hover {
+            color: black;
+            background: white;
+            transition: all 0.3s;
+        }
+    }
+    .snake-game__score-info {
+        color: white;
+        font-weight: 500;
+        font-size: 1.5em;
         margin-top: 20px;
-        .virtual-keyboard__button {
-            cursor: pointer;
-            &:hover {
-                color: #ffd600;
-            }
-        }
-        .virtual-keyboard__wrapper-bottom {
-            display: flex;
-        }
     }
 `;
