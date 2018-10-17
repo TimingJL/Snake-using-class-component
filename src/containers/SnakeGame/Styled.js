@@ -28,6 +28,7 @@ export const StyledSnakeGame = styled.div`
             width: calc(100vw - 20px);
             height: calc(100vw - 20px);
         }
+        margin-top: 20px;
         display: grid;
         grid-template-columns: repeat(${GAME_WIDTH}, 1fr);
         grid-template-rows: repeat(${GAME_WIDTH}, 1fr);
@@ -47,8 +48,12 @@ export const StyledSnakeGame = styled.div`
         animation: ${pulse} 2s infinite;
     }
     .snake-game__panel {
-        width: 100%;
-        height: 70%;
+        width: ${GAME_WRAPPER_SIZE}px;
+        height: ${GAME_WRAPPER_SIZE}px;
+        @media only screen and (max-width: 600px) {
+            width: calc(100vw - 20px);
+            height: calc(100vw - 20px);
+        }
         position: absolute;
         display: flex;
         justify-content: center;
@@ -75,6 +80,24 @@ export const StyledSnakeGame = styled.div`
             color: black;
             background: white;
             transition: all 0.3s;
+        }
+    }
+    .snake-game__virtual-keyboard {
+        color: white;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        font-size: 5em;
+        margin-top: 20px;
+        .virtual-keyboard__button {
+            cursor: pointer;
+            &:hover {
+                color: #ffd600;
+            }
+        }
+        .virtual-keyboard__wrapper-bottom {
+            display: flex;
         }
     }
 `;

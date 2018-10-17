@@ -14,6 +14,12 @@ import {
     makeSelectIsStartGame,
     makeSelectScore,
 } from './selectors';
+import {
+    ARROW_UP,
+    ARROW_DOWN,
+    ARROW_LEFT,
+    ARROW_RIGHT,
+} from './constants';
 
 let gameInterval;
 
@@ -54,7 +60,7 @@ class SnakeGame extends Component {
         const {
             handleOnSetSnakeDirection,
         } = this.props;
-        handleOnSetSnakeDirection(event.key);
+        handleOnSetSnakeDirection(event.code);
     }
     handleOnGameStartClick = () => {
         const {
@@ -67,6 +73,13 @@ class SnakeGame extends Component {
         gameInterval = setInterval(() => {
             handleOnSetSnakeMoving()
         }, snake.get('speed'));
+    }
+    handleOnVirtualKeyboardClick = (event) => {
+        const {
+            handleOnSetSnakeDirection,
+        } = this.props;
+        const code = event.currentTarget.getAttribute('data-code');
+        handleOnSetSnakeDirection(code);
     }
 
     render() {
@@ -106,6 +119,16 @@ class SnakeGame extends Component {
                             ))
                         ))
                     }
+                </div>
+                <div className="snake-game__virtual-keyboard">
+                    <div>
+                        <div data-code={ARROW_UP} className="virtual-keyboard__button fas fa-arrow-circle-up" onClick={this.handleOnVirtualKeyboardClick} />
+                    </div>
+                    <div className="virtual-keyboard__wrapper-bottom">
+                        <div data-code={ARROW_LEFT} className="virtual-keyboard__button fas fa-arrow-circle-left" onClick={this.handleOnVirtualKeyboardClick} />
+                        <div data-code={ARROW_DOWN} className="virtual-keyboard__button fas fa-arrow-circle-down" onClick={this.handleOnVirtualKeyboardClick} />
+                        <div data-code={ARROW_RIGHT} className="virtual-keyboard__button fas fa-arrow-circle-right" onClick={this.handleOnVirtualKeyboardClick} />
+                    </div>
                 </div>
             </StyledSnakeGame>
         );
