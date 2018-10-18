@@ -21,6 +21,7 @@ const pulse = keyframes`
 
 export const StyledSnakeGame = styled.div`
     position: relative;
+    margin-top: 30px;
     .snake-game__map-wrapper {
         width: ${GAME_WRAPPER_SIZE}px;
         height: ${GAME_WRAPPER_SIZE}px;
@@ -100,6 +101,5 @@ export const StyledSnakeGame = styled.div`
         color: white;
         font-weight: 500;
         font-size: 1.5em;
-        margin-top: 20px;
     }
 `;
