@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import {
     StyledVirtualKeyboard,
 } from './Styled';
@@ -21,5 +22,13 @@ const VirtualKeyboard = ({ handleOnClick }) => (
         </div>
     </StyledVirtualKeyboard>
 );
+
+VirtualKeyboard.propTypes = {
+    handleOnClick: PropTypes.func,
+};
+
+VirtualKeyboard.propTypes = {
+    handleOnClick: () => {},
+};
 
 export default VirtualKeyboard;

@@ -1,4 +1,6 @@
 import React, { Component } from 'react';
+import PropTypes from 'prop-types';
+import { Map, List } from 'immutable';
 import { connect } from 'react-redux';
 import { createStructuredSelector } from 'reselect';
 import VirtualKeyboard from 'containers/SnakeGame/components/VirtualKeyboard';
@@ -48,6 +50,22 @@ const updateGameView = (snake, block, food) => {
 };
 
 class SnakeGame extends Component {
+    static propTypes = {
+        snake: PropTypes.instanceOf(Map),
+        blocks: PropTypes.instanceOf(List),
+        food: PropTypes.instanceOf(Map),
+        isStartGame: PropTypes.bool,
+        score: PropTypes.number,
+        isPause: PropTypes.bool,
+    }
+    static defaultProps = {
+        snake: Map(),
+        blocks: List(),
+        food: Map(),
+        isStartGame: false,
+        score: 0,
+        isPause: false,
+    }
     componentDidMount() {
         document.addEventListener('keydown', this.handleOnKeyDown);
     }

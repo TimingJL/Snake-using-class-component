@@ -137,7 +137,7 @@ function snakeGameReducer(state = initialState, action) {
                     .updateIn(['isPause'], (isPause) => !isPause);
             }
             // stop the game
-            if (isPause|| !state.get('isStartGame')){
+            if (isPause || !state.get('isStartGame')){
                 return state;
             }
             // update snake direction
