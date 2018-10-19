@@ -58,7 +58,7 @@ const initialState = fromJS({
     blocks: defaultBlocks,
     snake: defaultSnake,
     food: createFood(),
-    isStartGame: false,
+    isGameStart: false,
     isPause: false,
     isSpeedModified: true,
     score: 0,
@@ -81,11 +81,11 @@ function snakeGameReducer(state = initialState, action) {
             const eatSelf = snakeBody.find((body) => (
                 body.get('x') === updatedPositionX && body.get('y') === updatedPositionY
             ));
-            if (state.get('isPause') || !state.get('isStartGame')) {
+            if (state.get('isPause') || !state.get('isGameStart')) {
                 return state;
             }
             if (eatSelf) {
-                return state.set('isStartGame', false);
+                return state.set('isGameStart', false);
             }
             return state
                 // update snake body
@@ -153,11 +153,11 @@ function snakeGameReducer(state = initialState, action) {
         }
 
         case SET_SNAKE_SPEED_MODIFIED: {
-            return state.set('isSpeedModified', false);
+            return state.set('isSpeedModified', action.payload);
         }
 
         case SET_SNAKE_DIRECTION: {
-            if (!state.get('isStartGame')) {
+            if (!state.get('isGameStart')) {
                 return state;
             }
             let isPause = state.get('isPause');
@@ -186,7 +186,7 @@ function snakeGameReducer(state = initialState, action) {
 
         case SET_SNAKE_GAME_START: {
             return initialState
-                .set('isStartGame', true);
+                .set('isGameStart', true);
         }
 
         default: {

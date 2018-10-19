@@ -18,6 +18,7 @@ export const setGameStart = () => ({
     type: SET_SNAKE_GAME_START,
 });
 
-export const setSnakeSpeedModified = () => ({
+export const setSnakeSpeedModified = (payload) => ({
     type: SET_SNAKE_SPEED_MODIFIED,
+    payload,
 });

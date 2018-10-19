@@ -15,7 +15,7 @@ import {
     makeSelectSnake,
     makeSelectBlocks,
     makeSelectFood,
-    makeSelectIsStartGame,
+    makeSelectisGameStart,
     makeSelectScore,
     makeSelectIsPause,
     makeSelectIsSpeedModified,
@@ -56,7 +56,7 @@ class SnakeGame extends Component {
         snake: PropTypes.instanceOf(Map),
         blocks: PropTypes.instanceOf(List),
         food: PropTypes.instanceOf(Map),
-        isStartGame: PropTypes.bool,
+        isGameStart: PropTypes.bool,
         score: PropTypes.number,
         isPause: PropTypes.bool,
         isSpeedModified: PropTypes.bool,
@@ -65,7 +65,7 @@ class SnakeGame extends Component {
         snake: Map(),
         blocks: List(),
         food: Map(),
-        isStartGame: false,
+        isGameStart: false,
         score: 0,
         isPause: false,
         isSpeedModified: true,
@@ -83,22 +83,26 @@ class SnakeGame extends Component {
         } = prevProps;
         const {
             snake,
-            isStartGame,
+            isGameStart,
             isPause,
             handleOnSetSnakeMoving,
             handleOnSetSpeedModified,
         } = this.props;
+        if (isPause) {
+            clearInterval(gameInterval);
+        }
         if (isSpeedModified) { // to udpate speed
-            handleOnSetSpeedModified();
+            handleOnSetSpeedModified(false);
             clearInterval(gameInterval);
             gameInterval = setInterval(() => {
-                if (isStartGame && !isPause) {
+                if (isGameStart && !isPause) {
                     handleOnSetSnakeMoving()
                 }
             }, snake.get('speed'));
         }
-        if (isPause || !isStartGame) {
+        if (!isGameStart) {
             clearInterval(gameInterval);
+            handleOnSetSpeedModified(true);
         }
     }
     handleOnKeyDown = (event) => {
@@ -128,7 +132,7 @@ class SnakeGame extends Component {
             snake,
             blocks,
             food,
-            isStartGame,
+            isGameStart,
             score,
             isPause,
         } = this.props;
@@ -136,7 +140,7 @@ class SnakeGame extends Component {
             <StyledSnakeGame onKeyDown={this.handleOnKeyDown}>
                 <div className="snake-game__score-info">Score: {score}</div>
                 {
-                    !isStartGame &&
+                    !isGameStart &&
                     <div className="snake-game__panel">
                         <div className="snake-game__score">
                             <span>Score: </span>
@@ -178,7 +182,7 @@ const mapStateToProps = createStructuredSelector({
     snake: makeSelectSnake(),
     blocks: makeSelectBlocks(),
     food: makeSelectFood(),
-    isStartGame: makeSelectIsStartGame(),
+    isGameStart: makeSelectisGameStart(),
     score: makeSelectScore(),
     isPause: makeSelectIsPause(),
     isSpeedModified: makeSelectIsSpeedModified(),
@@ -188,7 +192,7 @@ const mapDispatchToProps = dispatch => ({
     handleOnSetSnakeMoving: () => dispatch(setSnakeMoving()),
     handleOnSetSnakeDirection: (directionType) => dispatch(setSnakeDirection(directionType)),
     handleOnSetGameStart: () => dispatch(setGameStart()),
-    handleOnSetSpeedModified: () => dispatch(setSnakeSpeedModified()),
+    handleOnSetSpeedModified: (payload) => dispatch(setSnakeSpeedModified(payload)),
 });
 
 export default connect(
