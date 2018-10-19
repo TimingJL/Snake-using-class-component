@@ -8,6 +8,10 @@ import {
     SET_SNAKE_MOVING,
     SET_SNAKE_DIRECTION,
     SET_SNAKE_GAME_START,
+    SET_SNAKE_SPEED_MODIFIED,
+    SNAKE_LIMITED_SPEED,
+    SNAKE_INITIAL_SPEED,
+    SNAKE_DELTA_SPEED,
 
     ARROW_UP,
     ARROW_DOWN,
@@ -37,7 +41,7 @@ const defaultSnake = {
         x: 1,
         y: 0,
     },
-    speed: 100,
+    speed: SNAKE_INITIAL_SPEED,
 };
 
 const defaultBlocks = _.range(0, GAME_WIDTH).map((value, indexY) => (
@@ -56,6 +60,7 @@ const initialState = fromJS({
     food: createFood(),
     isStartGame: false,
     isPause: false,
+    isSpeedModified: true,
     score: 0,
 });
 
@@ -117,6 +122,16 @@ function snakeGameReducer(state = initialState, action) {
                     }
                     return maxLength;
                 })
+                // update snake speed after eating food
+                .updateIn(['snake', 'speed'], (speed) => {
+                    const food = state.get('food');
+                    if (food.get('x') === headPositionX &&
+                        food.get('y') === headPositionY) {
+                        const updatedSpeed = (speed - SNAKE_DELTA_SPEED) > SNAKE_LIMITED_SPEED ? (speed - SNAKE_DELTA_SPEED) : SNAKE_LIMITED_SPEED;
+                        return updatedSpeed;
+                    }
+                    return speed;
+                })
                 // update score
                 .updateIn(['score'], (score) => {
                     const food = state.get('food');
@@ -125,24 +140,38 @@ function snakeGameReducer(state = initialState, action) {
                         return score + 1;
                     }
                     return score;
+                })
+                // update isSpeedModified
+                .updateIn(['isSpeedModified'], (isSpeedModified) => {
+                    const food = state.get('food');
+                    if (food.get('x') === headPositionX &&
+                        food.get('y') === headPositionY) {
+                        return true;
+                    }
+                    return false;
                 });
         }
 
+        case SET_SNAKE_SPEED_MODIFIED: {
+            return state.set('isSpeedModified', false);
+        }
+
         case SET_SNAKE_DIRECTION: {
-            let isPause;
-            // Toggle isPause state
-            if (action.payload === 'Space') {
-                isPause = !action.payload;
-                return state
-                    .updateIn(['isPause'], (isPause) => !isPause);
-            }
-            // stop the game
-            if (isPause || !state.get('isStartGame')){
+            if (!state.get('isStartGame')) {
                 return state;
             }
-            // update snake direction
+            let isPause = state.get('isPause');
+            let isSpeedModified = state.get('isSpeedModified');
+            if (action.payload === 'Space') {
+                isPause = !state.get('isPause');
+                isSpeedModified = isPause;
+            }
+            if (!direction[action.payload] && !(action.payload === 'Space')) {
+                return state;
+            }
+
             return state.updateIn(['snake', 'direction'], (dir) => {
-                if (!direction[action.payload]) {
+                if (action.payload === 'Space' || isPause) {
                     return dir;
                 }
                 if (dir.get('x') * -1 === direction[action.payload].x &&
@@ -150,7 +179,9 @@ function snakeGameReducer(state = initialState, action) {
                     return dir;
                 }
                 return fromJS(direction[action.payload]);
-            });
+            })
+            .set('isPause', isPause)
+            .set('isSpeedModified', isSpeedModified);
         }
 
         case SET_SNAKE_GAME_START: {
@@ -165,7 +196,7 @@ function snakeGameReducer(state = initialState, action) {
 }
 
 const updatePosition = (position) => {
-    if (position > GAME_WIDTH -1) {
+    if (position > GAME_WIDTH - 1) {
         return 0;
     } else if (position < 0) {
         return GAME_WIDTH;

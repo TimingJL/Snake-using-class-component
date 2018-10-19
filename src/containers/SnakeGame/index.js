@@ -8,6 +8,7 @@ import {
     setSnakeMoving,
     setSnakeDirection,
     setGameStart,
+    setSnakeSpeedModified,
 } from './actions';
 import { StyledSnakeGame } from './Styled';
 import {
@@ -17,6 +18,7 @@ import {
     makeSelectIsStartGame,
     makeSelectScore,
     makeSelectIsPause,
+    makeSelectIsSpeedModified,
 } from './selectors';
 import {
     SPACE,
@@ -57,6 +59,7 @@ class SnakeGame extends Component {
         isStartGame: PropTypes.bool,
         score: PropTypes.number,
         isPause: PropTypes.bool,
+        isSpeedModified: PropTypes.bool,
     }
     static defaultProps = {
         snake: Map(),
@@ -65,6 +68,7 @@ class SnakeGame extends Component {
         isStartGame: false,
         score: 0,
         isPause: false,
+        isSpeedModified: true,
     }
     componentDidMount() {
         document.addEventListener('keydown', this.handleOnKeyDown);
@@ -72,6 +76,30 @@ class SnakeGame extends Component {
     componentWillUnmount() {
         document.removeEventListener('keydown', this.handleOnKeyDown);
         clearInterval(gameInterval);
+    }
+    componentDidUpdate(prevProps, prevState) {
+        const {
+            isSpeedModified,
+        } = prevProps;
+        const {
+            snake,
+            isStartGame,
+            isPause,
+            handleOnSetSnakeMoving,
+            handleOnSetSpeedModified,
+        } = this.props;
+        if (isSpeedModified) { // to udpate speed
+            handleOnSetSpeedModified();
+            clearInterval(gameInterval);
+            gameInterval = setInterval(() => {
+                if (isStartGame && !isPause) {
+                    handleOnSetSnakeMoving()
+                }
+            }, snake.get('speed'));
+        }
+        if (isPause || !isStartGame) {
+            clearInterval(gameInterval);
+        }
     }
     handleOnKeyDown = (event) => {
         const {
@@ -81,15 +109,11 @@ class SnakeGame extends Component {
     }
     handleOnGameStartClick = () => {
         const {
-            snake,
             handleOnSetSnakeMoving,
             handleOnSetGameStart,
         } = this.props;
         handleOnSetGameStart();
-        clearInterval(gameInterval);
-        gameInterval = setInterval(() => {
-            handleOnSetSnakeMoving()
-        }, snake.get('speed'));
+        handleOnSetSnakeMoving()
     }
     handleOnVirtualKeyboardClick = (event) => {
         const {
@@ -157,12 +181,14 @@ const mapStateToProps = createStructuredSelector({
     isStartGame: makeSelectIsStartGame(),
     score: makeSelectScore(),
     isPause: makeSelectIsPause(),
+    isSpeedModified: makeSelectIsSpeedModified(),
 });
 
 const mapDispatchToProps = dispatch => ({
     handleOnSetSnakeMoving: () => dispatch(setSnakeMoving()),
     handleOnSetSnakeDirection: (directionType) => dispatch(setSnakeDirection(directionType)),
     handleOnSetGameStart: () => dispatch(setGameStart()),
+    handleOnSetSpeedModified: () => dispatch(setSnakeSpeedModified()),
 });
 
 export default connect(

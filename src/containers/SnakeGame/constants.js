@@ -3,9 +3,14 @@ export const INIT = `${KEY_REDUCER}/INIT`;
 export const SET_SNAKE_MOVING = `${KEY_REDUCER}/SET_SNAKE_MOVING`;
 export const SET_SNAKE_DIRECTION = `${KEY_REDUCER}/SET_SNAKE_DIRECTION`;
 export const SET_SNAKE_GAME_START = `${KEY_REDUCER}/SET_SNAKE_GAME_START`;
+export const SET_SNAKE_SPEED_MODIFIED = `${KEY_REDUCER}/SET_SNAKE_SPEED_MODIFIED`;
 
 export const GAME_WRAPPER_SIZE = 600;
 export const GAME_WIDTH = 30;
+
+export const SNAKE_INITIAL_SPEED = 200;
+export const SNAKE_LIMITED_SPEED = 10;
+export const SNAKE_DELTA_SPEED = 2;
 
 export const ARROW_UP = 'ArrowUp';
 export const ARROW_DOWN = 'ArrowDown';

@@ -2,6 +2,7 @@ import {
     SET_SNAKE_MOVING,
     SET_SNAKE_DIRECTION,
     SET_SNAKE_GAME_START,
+    SET_SNAKE_SPEED_MODIFIED,
 } from './constants';
 
 export const setSnakeMoving = () => ({
@@ -15,4 +16,8 @@ export const setSnakeDirection = (directionType) => ({
 
 export const setGameStart = () => ({
     type: SET_SNAKE_GAME_START,
+});
+
+export const setSnakeSpeedModified = () => ({
+    type: SET_SNAKE_SPEED_MODIFIED,
 });
