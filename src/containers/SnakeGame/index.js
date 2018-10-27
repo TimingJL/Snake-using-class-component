@@ -42,11 +42,11 @@ const updateGameView = (snake, block, food) => {
         if (found) {
             return 'snake-game__map-block-item snake-game__draw-snake-body';
         }
-        // draw food
-        if (block.get('x') === food.get('x') &&
-            block.get('y') === food.get('y')) {
-            return 'snake-game__draw-snake-food';
-        }
+    }
+    // draw food
+    if (block.get('x') === food.get('x') &&
+        block.get('y') === food.get('y')) {
+        return 'snake-game__draw-snake-food';
     }
     return 'snake-game__map-block-item';
 };
@@ -60,6 +60,8 @@ class SnakeGame extends Component {
         score: PropTypes.number,
         isPause: PropTypes.bool,
         isSpeedModified: PropTypes.bool,
+        handleOnSetSnakeMoving: PropTypes.func,
+        handleOnSetSpeedModified: PropTypes.func,
     }
     static defaultProps = {
         snake: Map(),
@@ -69,6 +71,8 @@ class SnakeGame extends Component {
         score: 0,
         isPause: false,
         isSpeedModified: true,
+        handleOnSetSnakeMoving: () => { },
+        handleOnSetSpeedModified: () => { },
     }
     componentDidMount() {
         document.addEventListener('keydown', this.handleOnKeyDown);
@@ -117,7 +121,7 @@ class SnakeGame extends Component {
             handleOnSetGameStart,
         } = this.props;
         handleOnSetGameStart();
-        handleOnSetSnakeMoving()
+        handleOnSetSnakeMoving();
     }
     handleOnVirtualKeyboardClick = (event) => {
         const {

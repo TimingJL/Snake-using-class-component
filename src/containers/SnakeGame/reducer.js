@@ -31,12 +31,12 @@ const createFood = () => ({
 });
 
 const defaultSnake = {
-    body: [],
-    maxLength: 2,
     headPosition: {
         x: 0,
         y: 0,
     },
+    body: [],
+    maxLength: 2,
     direction: {
         x: 1,
         y: 0,
@@ -76,6 +76,8 @@ function snakeGameReducer(state = initialState, action) {
             const headPositionY = state.getIn(['snake', 'headPosition', 'y']);
             const maxLength = state.getIn(['snake', 'maxLength']);
             const snakeBody = state.getIn(['snake', 'body']);
+            const food = state.get('food');
+            const isEatFood = food.get('x') === headPositionX && food.get('y') === headPositionY;
             const updatedPositionX = headPositionX + direction.get('x');
             const updatedPositionY = headPositionY + direction.get('y');
             const eatSelf = snakeBody.find((body) => (
@@ -107,26 +109,21 @@ function snakeGameReducer(state = initialState, action) {
                 )
                 // create new food
                 .updateIn(['food'], (food) => {
-                    if (food.get('x') === headPositionX &&
-                        food.get('y') === headPositionY) {
+                    if (isEatFood) {
                         return fromJS(createFood());
                     }
                     return food;
                 })
                 // update snake maxLength
                 .updateIn(['snake', 'maxLength'], (maxLength) => {
-                    const food = state.get('food');
-                    if (food.get('x') === headPositionX &&
-                        food.get('y') === headPositionY) {
+                    if (isEatFood) {
                         return maxLength + 1;
                     }
                     return maxLength;
                 })
                 // update snake speed after eating food
                 .updateIn(['snake', 'speed'], (speed) => {
-                    const food = state.get('food');
-                    if (food.get('x') === headPositionX &&
-                        food.get('y') === headPositionY) {
+                    if (isEatFood) {
                         const updatedSpeed = (speed - SNAKE_DELTA_SPEED) > SNAKE_LIMITED_SPEED ? (speed - SNAKE_DELTA_SPEED) : SNAKE_LIMITED_SPEED;
                         return updatedSpeed;
                     }
@@ -134,18 +131,14 @@ function snakeGameReducer(state = initialState, action) {
                 })
                 // update score
                 .updateIn(['score'], (score) => {
-                    const food = state.get('food');
-                    if (food.get('x') === headPositionX &&
-                        food.get('y') === headPositionY) {
+                    if (isEatFood) {
                         return score + 1;
                     }
                     return score;
                 })
                 // update isSpeedModified
                 .updateIn(['isSpeedModified'], (isSpeedModified) => {
-                    const food = state.get('food');
-                    if (food.get('x') === headPositionX &&
-                        food.get('y') === headPositionY) {
+                    if (isEatFood) {
                         return true;
                     }
                     return false;
