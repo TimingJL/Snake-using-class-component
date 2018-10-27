@@ -12,7 +12,7 @@ class App extends Component {
           size={60}
           octoColor={'black'}
           bannerColor={'white'}
-          href="https://timingjl.github.io/Snake"
+          href="https://github.com/TimingJL/Snake"
         />
       </div>
     );
