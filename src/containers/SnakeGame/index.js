@@ -23,6 +23,7 @@ import {
 import {
     SPACE,
 } from './constants';
+import gtag from '../../utils/tracking';
 
 let gameInterval;
 
@@ -114,6 +115,10 @@ class SnakeGame extends Component {
             handleOnSetSnakeDirection,
         } = this.props;
         handleOnSetSnakeDirection(event.code);
+        gtag('event', 'Keydown', {
+            'event_category': 'Keydown',
+            'event_label': event.code,
+        });
     }
     handleOnGameStartClick = () => {
         const {
@@ -122,6 +127,7 @@ class SnakeGame extends Component {
         } = this.props;
         handleOnSetGameStart();
         handleOnSetSnakeMoving();
+        gtag('event', 'start');
     }
     handleOnVirtualKeyboardClick = (event) => {
         const {
@@ -129,6 +135,10 @@ class SnakeGame extends Component {
         } = this.props;
         const code = event.currentTarget.getAttribute('data-code');
         handleOnSetSnakeDirection(code);
+        gtag('event', 'VirtualKeyboard', {
+            'event_category': 'VirtualKeyboard',
+            'event_label': code,
+        });
     }
 
     render() {

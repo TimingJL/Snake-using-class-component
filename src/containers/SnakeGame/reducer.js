@@ -18,6 +18,7 @@ import {
     ARROW_LEFT,
     ARROW_RIGHT,
 } from './constants';
+import gtag from '../../utils/tracking';
 
 const direction = {};
 direction[ARROW_UP] = { x: 0, y: -1 };
@@ -87,6 +88,10 @@ function snakeGameReducer(state = initialState, action) {
                 return state;
             }
             if (eatSelf) {
+                gtag('event', 'Score', {
+                    'event_category': 'Score',
+                    'event_label': state.get('score'),
+                });
                 return state.set('isGameStart', false);
             }
             return state
